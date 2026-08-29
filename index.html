@@ -913,23 +913,46 @@ async function submitBatch() {
 
 try {
 
-  await fetch(
-    APPS_SCRIPT_URL,
-    {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(payload)
-    }
-  );
+  const response =
+    await fetch(
+      APPS_SCRIPT_URL,
+      {
+        method: "POST",
+        headers: {
+          /*
+           * Keeping this a "simple request" content type
+           * (text/plain) avoids a CORS preflight, which
+           * Apps Script web apps cannot answer. Do NOT
+           * change this to "application/json".
+           */
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+
+  const result =
+    await response.json();
+
+
+  if (!result.success) {
+
+    throw new Error(
+      result.message ||
+      "Server reported failure with no message."
+    );
+
+  }
 
 
   showResult(
     "✓ Batch submitted.<br><br>" +
     "Batch ID: <strong>" +
-    escapeHtml(batchId) +
+    escapeHtml(result.batchId) +
     "</strong><br>" +
     "Scanned items: <strong>" +
-    scannedItems.length +
+    result.count +
     "</strong>"
   );
 
@@ -947,7 +970,10 @@ try {
     "❌ Error sending batch.<br><br>" +
     escapeHtml(
       error.toString()
-    )
+    ) +
+    "<br><br>Check that APPS_SCRIPT_URL points to the " +
+    "latest deployment, and that its access is set to " +
+    "\"Anyone\"."
   );
 
 } finally {
