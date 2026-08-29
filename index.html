@@ -911,71 +911,46 @@ async function submitBatch() {
   };
 
 
-  try {
+try {
 
-    /*
-     * IMPORTANT:
-     *
-     * no-cors allows the GitHub Pages
-     * site to POST to Apps Script.
-     *
-     * We intentionally don't try to read
-     * the response here.
-     */
-    await fetch(
-      APPS_SCRIPT_URL,
-      {
-        method: "POST",
-
-        mode: "no-cors",
-
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
-
-        body:
-          JSON.stringify(payload)
-      }
-    );
+  await fetch(
+    APPS_SCRIPT_URL,
+    {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(payload)
+    }
+  );
 
 
-    /*
-     * With no-cors, the browser doesn't
-     * expose the Apps Script response.
-     *
-     * If fetch completes, we consider
-     * the submission sent.
-     */
-    showResult(
-      "Batch sent successfully.<br><br>" +
-      "Batch ID: <strong>" +
-      escapeHtml(batchId) +
-      "</strong><br>" +
-      "Scanned items: <strong>" +
-      scannedItems.length +
-      "</strong>"
-    );
+  showResult(
+    "✓ Batch submitted.<br><br>" +
+    "Batch ID: <strong>" +
+    escapeHtml(batchId) +
+    "</strong><br>" +
+    "Scanned items: <strong>" +
+    scannedItems.length +
+    "</strong>"
+  );
 
 
-    /*
-     * Clear current batch after submit.
-     */
-    scannedItems = [];
+  scannedItems = [];
 
-    updateScanList();
+  updateScanList();
 
 
-  } catch (error) {
+} catch (error) {
 
-    console.error(error);
+  console.error(error);
 
-    showResult(
-      "❌ Error sending batch.<br><br>" +
-      escapeHtml(error.toString())
-    );
+  showResult(
+    "❌ Error sending batch.<br><br>" +
+    escapeHtml(
+      error.toString()
+    )
+  );
 
-  } finally {
+} finally {
 
     submitButton.disabled = false;
 
