@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <base target="_top">
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Bulk Location Update Scanner</title>
 
+  <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -25,7 +34,10 @@
       padding: 20px;
     }
 
-    h1 { text-align: center; margin-bottom: 20px; }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
     .card {
       background: white;
@@ -67,15 +79,35 @@
       margin-top: 10px;
     }
 
-    .start-btn { background: #1976d2; color: white; }
-    .scan-btn { background: #2e7d32; color: white; }
-    .submit-btn { background: #ef6c00; color: white; }
-    .clear-btn { background: #c62828; color: white; }
-    .link-btn { background: #455a64; color: white; }
+    .start-btn {
+      background: #1976d2;
+      color: white;
+    }
 
-    button:disabled { background: #aaa; cursor: not-allowed; }
+    .scan-btn {
+      background: #2e7d32;
+      color: white;
+    }
 
-    #reader { width: 100%; margin-top: 15px; }
+    .submit-btn {
+      background: #ef6c00;
+      color: white;
+    }
+
+    .clear-btn {
+      background: #c62828;
+      color: white;
+    }
+
+    button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    #reader {
+      width: 100%;
+      margin-top: 15px;
+    }
 
     .status {
       padding: 12px;
@@ -91,7 +123,10 @@
       margin: 15px 0;
     }
 
-    .scan-list { max-height: 300px; overflow-y: auto; }
+    .scan-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
 
     .scan-item {
       display: flex;
@@ -102,8 +137,15 @@
       gap: 10px;
     }
 
-    .scan-number { font-weight: bold; min-width: 30px; }
-    .scan-value { flex: 1; word-break: break-all; }
+    .scan-number {
+      font-weight: bold;
+      min-width: 30px;
+    }
+
+    .scan-value {
+      flex: 1;
+      word-break: break-all;
+    }
 
     .remove-btn {
       width: auto;
@@ -114,16 +156,28 @@
       font-size: 12px;
     }
 
-    .hidden { display: none; }
+    .hidden {
+      display: none;
+    }
 
-    .selection-summary { font-size: 14px; line-height: 1.7; }
+    .selection-summary {
+      font-size: 14px;
+      line-height: 1.7;
+    }
 
     @media(max-width: 600px) {
-      .dropdown-grid { grid-template-columns: 1fr; }
-      .container { padding: 10px; }
+
+      .dropdown-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 10px;
+      }
     }
 
   </style>
+
 </head>
 
 
@@ -133,34 +187,112 @@
 
   <h1>Bulk Location Update</h1>
 
+
+  <!-- =========================================
+       LOCATION / DROPDOWN SELECTION
+       ========================================= -->
+
   <div class="card">
+
     <h3>1. Select Location</h3>
-    <div id="dropdownContainer" class="dropdown-grid"></div>
-    <button id="startBtn" class="start-btn" onclick="startScanning()">START BULK SCANNING</button>
+
+    <div
+      id="dropdownContainer"
+      class="dropdown-grid"
+    ></div>
+
+    <button
+      id="startBtn"
+      class="start-btn"
+      onclick="startScanning()"
+    >
+      START BULK SCANNING
+    </button>
+
   </div>
 
-  <div id="scannerCard" class="card hidden">
+
+  <!-- =========================================
+       SCANNER
+       ========================================= -->
+
+  <div
+    id="scannerCard"
+    class="card hidden"
+  >
+
     <h3>2. Scan QR Codes</h3>
+
     <div class="selection-summary">
       <strong>Current Selection:</strong>
+
       <div id="selectionSummary"></div>
     </div>
-    <div class="scan-count">Scanned: <span id="scanCount">0</span></div>
+
+    <div class="scan-count">
+      Scanned:
+      <span id="scanCount">0</span>
+    </div>
+
     <div id="reader"></div>
-    <div id="scanStatus" class="status">Ready to scan.</div>
+
+    <div
+      id="scanStatus"
+      class="status"
+    >
+      Ready to scan.
+    </div>
+
   </div>
 
-  <div id="listCard" class="card hidden">
+
+  <!-- =========================================
+       SCANNED LIST
+       ========================================= -->
+
+  <div
+    id="listCard"
+    class="card hidden"
+  >
+
     <h3>Scanned Items</h3>
-    <div id="scanList" class="scan-list"></div>
-    <button id="submitBtn" class="submit-btn" onclick="submitBatch()">SUBMIT BATCH</button>
-    <button class="clear-btn" onclick="clearBatch()">CLEAR BATCH</button>
+
+    <div
+      id="scanList"
+      class="scan-list"
+    ></div>
+
+    <button
+      id="submitBtn"
+      class="submit-btn"
+      onclick="submitBatch()"
+    >
+      SUBMIT BATCH
+    </button>
+
+    <button
+      class="clear-btn"
+      onclick="clearBatch()"
+    >
+      CLEAR BATCH
+    </button>
+
   </div>
 
-  <div id="resultCard" class="card hidden">
+
+  <!-- =========================================
+       RESULT
+       ========================================= -->
+
+  <div
+    id="resultCard"
+    class="card hidden"
+  >
+
     <h3>Result</h3>
+
     <div id="resultMessage"></div>
-    <button class="link-btn" onclick="window.location.href = '?'">VIEW DASHBOARD</button>
+
   </div>
 
 </div>
@@ -169,278 +301,803 @@
 <script>
 
 /******************************************************
- * MODULAR DROPDOWNS - add/remove here. "name" becomes
- * the Google Sheet column header.
+ * CONFIGURATION
  ******************************************************/
+
+/*
+ * PUT YOUR APPS SCRIPT WEB APP URL HERE.
+ */
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzvL4UMzMhOIokRFWc4aLPdO7RcnmJ7YvkzhNvqazp8jHG1EJqkQ7QW2DbSezGOZIGT_g/exec";
+
+
+/*
+ * ====================================================
+ * MODULAR DROPDOWNS
+ * ====================================================
+ *
+ * Add/remove dropdowns here.
+ *
+ * The "name" becomes the Google Sheet column header.
+ *
+ * Example:
+ *
+ * {
+ *   name: "Building",
+ *   options: [
+ *     "Production",
+ *     "Admin",
+ *     "Warehouse"
+ *   ]
+ * }
+ */
+
 const DROPDOWNS = [
-  { name: "Building", options: ["Production", "Warehouse", "Utility", "Office"] },
-  { name: "Floor", options: ["Ground Floor", "1st Floor", "2nd Floor", "3rd Floor"] },
-  { name: "Area", options: ["Y1", "Y2", "Y3", "Y4", "Y5", "Y6", "Y7"] },
-  { name: "Section", options: ["Stitching", "Cutting", "Finishing", "Maintenance"] }
+
+  {
+    name: "Building",
+
+    options: [
+      "Production",
+      "Warehouse",
+      "Utility",
+      "Office"
+    ]
+  },
+
+  {
+    name: "Floor",
+
+    options: [
+      "Ground Floor",
+      "1st Floor",
+      "2nd Floor",
+      "3rd Floor"
+    ]
+  },
+
+  {
+    name: "Area",
+
+    options: [
+      "Y1",
+      "Y2",
+      "Y3",
+      "Y4",
+      "Y5",
+      "Y6",
+      "Y7"
+    ]
+  },
+
+  {
+    name: "Section",
+
+    options: [
+      "Stitching",
+      "Cutting",
+      "Finishing",
+      "Maintenance"
+    ]
+  }
+
 ];
 
+
+/******************************************************
+ * APPLICATION STATE
+ ******************************************************/
+
 let scannedItems = [];
+
 let html5QrCode = null;
+
 let scannerRunning = false;
 
 
+/******************************************************
+ * BUILD DROPDOWNS
+ ******************************************************/
+
 function buildDropdowns() {
 
-  const container = document.getElementById("dropdownContainer");
+  const container =
+    document.getElementById(
+      "dropdownContainer"
+    );
+
   container.innerHTML = "";
 
-  DROPDOWNS.forEach((dropdown, index) => {
+  DROPDOWNS.forEach(
+    (dropdown, index) => {
 
-    const field = document.createElement("div");
-    field.className = "field";
+      const field =
+        document.createElement("div");
 
-    const label = document.createElement("label");
-    label.textContent = dropdown.name;
+      field.className = "field";
 
-    const select = document.createElement("select");
-    select.id = "dropdown_" + index;
+      const label =
+        document.createElement("label");
 
-    const emptyOption = document.createElement("option");
-    emptyOption.value = "";
-    emptyOption.textContent = "-- Select " + dropdown.name + " --";
-    select.appendChild(emptyOption);
+      label.textContent =
+        dropdown.name;
 
-    dropdown.options.forEach(optionValue => {
-      const option = document.createElement("option");
-      option.value = optionValue;
-      option.textContent = optionValue;
-      select.appendChild(option);
-    });
+      const select =
+        document.createElement("select");
 
-    field.appendChild(label);
-    field.appendChild(select);
-    container.appendChild(field);
-  });
+      select.id =
+        "dropdown_" + index;
+
+      /*
+       * Empty option.
+       */
+      const emptyOption =
+        document.createElement("option");
+
+      emptyOption.value = "";
+
+      emptyOption.textContent =
+        "-- Select " +
+        dropdown.name +
+        " --";
+
+      select.appendChild(
+        emptyOption
+      );
+
+
+      /*
+       * Actual options.
+       */
+      dropdown.options.forEach(
+        optionValue => {
+
+          const option =
+            document.createElement("option");
+
+          option.value =
+            optionValue;
+
+          option.textContent =
+            optionValue;
+
+          select.appendChild(
+            option
+          );
+        }
+      );
+
+      field.appendChild(label);
+
+      field.appendChild(select);
+
+      container.appendChild(field);
+    }
+  );
 }
 
+
+/******************************************************
+ * GET CURRENT DROPDOWN VALUES
+ ******************************************************/
 
 function getSelectedDropdowns() {
 
-  return DROPDOWNS.map((dropdown, index) => {
-    const select = document.getElementById("dropdown_" + index);
-    return { name: dropdown.name, value: select.value };
-  });
+  return DROPDOWNS.map(
+    (dropdown, index) => {
+
+      const select =
+        document.getElementById(
+          "dropdown_" + index
+        );
+
+      return {
+        name: dropdown.name,
+        value: select.value
+      };
+
+    }
+  );
 }
 
 
+/******************************************************
+ * VALIDATE DROPDOWNS
+ ******************************************************/
+
+function validateDropdowns() {
+
+  const selections =
+    getSelectedDropdowns();
+
+  for (const selection of selections) {
+
+    if (!selection.value) {
+
+      alert(
+        "Please select " +
+        selection.name
+      );
+
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+/******************************************************
+ * START SCANNING
+ ******************************************************/
+
 function startScanning() {
 
-  const missing = getSelectedDropdowns().filter(d => !d.value);
-
-  if (missing.length > 0) {
-    alert("Please select: " + missing.map(d => d.name).join(", "));
+  if (!validateDropdowns()) {
     return;
   }
 
-  document.getElementById("scannerCard").classList.remove("hidden");
-  document.getElementById("listCard").classList.remove("hidden");
+  /*
+   * Clear previous batch.
+   */
+  scannedItems = [];
 
-  document.getElementById("selectionSummary").innerHTML =
-    getSelectedDropdowns().map(d => "<strong>" + d.name + ":</strong> " + escapeHtml(d.value)).join(" &nbsp;|&nbsp; ");
+  updateScanList();
 
-  DROPDOWNS.forEach((_, index) => {
-    document.getElementById("dropdown_" + index).disabled = true;
-  });
 
-  document.getElementById("startBtn").disabled = true;
+  /*
+   * Show selected values.
+   */
+  const selections =
+    getSelectedDropdowns();
+
+  const summary =
+    document.getElementById(
+      "selectionSummary"
+    );
+
+  summary.innerHTML =
+    selections
+      .map(
+        item =>
+          `<div>
+            <strong>${escapeHtml(item.name)}:</strong>
+            ${escapeHtml(item.value)}
+          </div>`
+      )
+      .join("");
+
+
+  document
+    .getElementById("scannerCard")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("listCard")
+    .classList.remove("hidden");
+
+
+  document
+    .getElementById("startBtn")
+    .disabled = true;
+
+
+  /*
+   * Prevent changing location
+   * while scanning.
+   */
+  DROPDOWNS.forEach(
+    (_, index) => {
+
+      document
+        .getElementById(
+          "dropdown_" + index
+        )
+        .disabled = true;
+
+    }
+  );
+
 
   startCamera();
 }
 
 
+/******************************************************
+ * START CAMERA
+ ******************************************************/
+
 function startCamera() {
 
-  if (scannerRunning) return;
+  if (scannerRunning) {
+    return;
+  }
 
-  html5QrCode = new Html5Qrcode("reader");
+  html5QrCode =
+    new Html5Qrcode("reader");
+
 
   const config = {
+
     fps: 10,
-    qrbox: function(viewfinderWidth, viewfinderHeight) {
-      const size = Math.min(viewfinderWidth, viewfinderHeight) * 0.70;
-      return { width: size, height: size };
+
+    qrbox: function(
+      viewfinderWidth,
+      viewfinderHeight
+    ) {
+
+      const size =
+        Math.min(
+          viewfinderWidth,
+          viewfinderHeight
+        ) * 0.70;
+
+      return {
+        width: size,
+        height: size
+      };
     }
+
   };
 
+
   html5QrCode
-    .start({ facingMode: "environment" }, config, onScanSuccess, onScanError)
+    .start(
+      {
+        facingMode: "environment"
+      },
+
+      config,
+
+      onScanSuccess,
+
+      onScanError
+
+    )
     .then(() => {
+
       scannerRunning = true;
-      setStatus("Camera ready. Start scanning QR codes.");
+
+      setStatus(
+        "Camera ready. Start scanning QR codes."
+      );
+
     })
     .catch(error => {
+
       console.error(error);
-      setStatus("Unable to access camera: " + error);
+
+      setStatus(
+        "Unable to access camera: " +
+        error
+      );
+
     });
 }
 
 
+/******************************************************
+ * QR SCAN SUCCESS
+ ******************************************************/
+
 function onScanSuccess(decodedText) {
 
-  const qrData = String(decodedText).trim();
-  if (!qrData) return;
+  const qrData =
+    String(decodedText).trim();
 
-  const duplicate = scannedItems.some(item => item.qrData === qrData);
 
-  if (duplicate) {
-    setStatus("⚠ Duplicate QR ignored: " + qrData);
+  if (!qrData) {
     return;
   }
 
-  scannedItems.push({ qrData: qrData });
-  updateScanList();
-  setStatus("✓ Scanned: " + qrData);
 
-  if (navigator.vibrate) navigator.vibrate(100);
+  /*
+   * DUPLICATE CHECK
+   *
+   * Duplicate is only checked
+   * against the current batch.
+   */
+  const duplicate =
+    scannedItems.some(
+      item =>
+        item.qrData === qrData
+    );
+
+
+  if (duplicate) {
+
+    setStatus(
+      "⚠ Duplicate QR ignored: " +
+      qrData
+    );
+
+    /*
+     * Don't add duplicate.
+     */
+    return;
+  }
+
+
+  /*
+   * Add to current batch.
+   */
+  scannedItems.push({
+    qrData: qrData
+  });
+
+
+  updateScanList();
+
+
+  setStatus(
+    "✓ Scanned: " +
+    qrData
+  );
+
+
+  /*
+   * Optional vibration on supported phones.
+   */
+  if (navigator.vibrate) {
+    navigator.vibrate(100);
+  }
 }
 
+
+/******************************************************
+ * SCAN ERROR
+ ******************************************************/
 
 function onScanError(errorMessage) {
-  // Ignore continuous "QR not found" messages.
+
+  /*
+   * Ignore continuous scanner
+   * "QR not found" messages.
+   */
+
 }
 
+
+/******************************************************
+ * UPDATE SCAN LIST
+ ******************************************************/
 
 function updateScanList() {
 
-  const list = document.getElementById("scanList");
-  const count = document.getElementById("scanCount");
+  const list =
+    document.getElementById(
+      "scanList"
+    );
 
-  count.textContent = scannedItems.length;
+  const count =
+    document.getElementById(
+      "scanCount"
+    );
+
+
+  count.textContent =
+    scannedItems.length;
+
 
   if (scannedItems.length === 0) {
-    list.innerHTML = "<div>No QR codes scanned yet.</div>";
+
+    list.innerHTML =
+      "<div>No QR codes scanned yet.</div>";
+
     return;
   }
 
-  list.innerHTML = scannedItems.map((item, index) => `
-    <div class="scan-item">
-      <div class="scan-number">${index + 1}</div>
-      <div class="scan-value">${escapeHtml(item.qrData)}</div>
-      <button class="remove-btn" onclick="removeScan(${index})">Remove</button>
-    </div>
-  `).join("");
+
+  list.innerHTML =
+    scannedItems
+      .map(
+        (item, index) => {
+
+          return `
+            <div class="scan-item">
+
+              <div class="scan-number">
+                ${index + 1}
+              </div>
+
+              <div class="scan-value">
+                ${escapeHtml(item.qrData)}
+              </div>
+
+              <button
+                class="remove-btn"
+                onclick="removeScan(${index})"
+              >
+                Remove
+              </button>
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
 }
 
 
+/******************************************************
+ * REMOVE SCAN
+ ******************************************************/
+
 function removeScan(index) {
-  scannedItems.splice(index, 1);
+
+  scannedItems.splice(
+    index,
+    1
+  );
+
   updateScanList();
 }
 
 
-function submitBatch() {
+/******************************************************
+ * SUBMIT BATCH
+ ******************************************************/
+
+async function submitBatch() {
 
   if (scannedItems.length === 0) {
-    alert("Please scan at least one QR code.");
+
+    alert(
+      "Please scan at least one QR code."
+    );
+
     return;
   }
 
-  if (!confirm("Submit " + scannedItems.length + " scanned item(s)?")) {
+
+  const confirmed =
+    confirm(
+      "Submit " +
+      scannedItems.length +
+      " scanned item(s)?"
+    );
+
+
+  if (!confirmed) {
     return;
   }
 
-  const submitButton = document.getElementById("submitBtn");
+
+  const submitButton =
+    document.getElementById(
+      "submitBtn"
+    );
+
   submitButton.disabled = true;
-  submitButton.textContent = "SUBMITTING...";
+
+  submitButton.textContent =
+    "SUBMITTING...";
+
 
   const batchId =
-    "BATCH-" + new Date().toISOString().replace(/[-:.TZ]/g, "") +
-    "-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+    "BATCH-" +
+    new Date()
+      .toISOString()
+      .replace(
+        /[-:.TZ]/g,
+        ""
+      ) +
+    "-" +
+    Math.random()
+      .toString(36)
+      .substring(2, 7)
+      .toUpperCase();
 
-  const payload = {
-    batchId: batchId,
-    dropdowns: getSelectedDropdowns(),
-    scans: scannedItems
-  };
 
   /*
-   * Same-origin call straight to the Apps Script server function -
-   * no fetch(), no CORS, no deployment-access edge cases.
+   * Get selected dropdowns.
    */
-  google.script.run
-    .withSuccessHandler(onSubmitSuccess)
-    .withFailureHandler(onSubmitError)
-    .submitScanBatch(payload);
-}
+  const dropdowns =
+    getSelectedDropdowns();
 
 
-function onSubmitSuccess(result) {
+  /*
+   * Data sent to Apps Script.
+   */
+  const payload = {
 
-  const submitButton = document.getElementById("submitBtn");
-  submitButton.disabled = false;
-  submitButton.textContent = "SUBMIT BATCH";
+    batchId: batchId,
 
-  if (!result || !result.success) {
-    onSubmitError(new Error((result && result.message) || "Unknown server error."));
-    return;
+    dropdowns: dropdowns,
+
+    scans: scannedItems
+
+  };
+
+
+try {
+
+  const response =
+    await fetch(
+      APPS_SCRIPT_URL,
+      {
+        method: "POST",
+        headers: {
+          /*
+           * Keeping this a "simple request" content type
+           * (text/plain) avoids a CORS preflight, which
+           * Apps Script web apps cannot answer. Do NOT
+           * change this to "application/json".
+           */
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+
+  const result =
+    await response.json();
+
+
+  if (!result.success) {
+
+    throw new Error(
+      result.message ||
+      "Server reported failure with no message."
+    );
+
   }
+
 
   showResult(
     "✓ Batch submitted.<br><br>" +
-    "Batch ID: <strong>" + escapeHtml(result.batchId) + "</strong><br>" +
-    "Scanned items: <strong>" + result.count + "</strong>"
+    "Batch ID: <strong>" +
+    escapeHtml(result.batchId) +
+    "</strong><br>" +
+    "Scanned items: <strong>" +
+    result.count +
+    "</strong>"
   );
 
+
   scannedItems = [];
+
   updateScanList();
-}
 
 
-function onSubmitError(error) {
-
-  const submitButton = document.getElementById("submitBtn");
-  submitButton.disabled = false;
-  submitButton.textContent = "SUBMIT BATCH";
+} catch (error) {
 
   console.error(error);
 
   showResult(
-    "❌ Error sending batch.<br><br>" + escapeHtml(error.message || error.toString())
+    "❌ Error sending batch.<br><br>" +
+    escapeHtml(
+      error.toString()
+    ) +
+    "<br><br>Check that APPS_SCRIPT_URL points to the " +
+    "latest deployment, and that its access is set to " +
+    "\"Anyone\"."
+  );
+
+} finally {
+
+    submitButton.disabled = false;
+
+    submitButton.textContent =
+      "SUBMIT BATCH";
+  }
+}
+
+
+/******************************************************
+ * CLEAR BATCH
+ ******************************************************/
+
+function clearBatch() {
+
+  if (scannedItems.length === 0) {
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      "Remove all scanned QR codes?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  scannedItems = [];
+
+  updateScanList();
+
+  setStatus(
+    "Batch cleared."
   );
 }
 
 
-function clearBatch() {
-
-  if (scannedItems.length === 0) return;
-
-  if (!confirm("Remove all scanned QR codes?")) return;
-
-  scannedItems = [];
-  updateScanList();
-  setStatus("Batch cleared.");
-}
-
+/******************************************************
+ * STATUS MESSAGE
+ ******************************************************/
 
 function setStatus(message) {
-  document.getElementById("scanStatus").innerHTML = escapeHtml(message);
+
+  document
+    .getElementById("scanStatus")
+    .innerHTML =
+      escapeHtml(message);
 }
 
+
+/******************************************************
+ * RESULT
+ ******************************************************/
 
 function showResult(message) {
-  document.getElementById("resultCard").classList.remove("hidden");
-  document.getElementById("resultMessage").innerHTML = message;
+
+  const card =
+    document.getElementById(
+      "resultCard"
+    );
+
+  const result =
+    document.getElementById(
+      "resultMessage"
+    );
+
+  card.classList.remove(
+    "hidden"
+  );
+
+  result.innerHTML =
+    message;
 }
 
+
+/******************************************************
+ * HTML ESCAPE
+ ******************************************************/
 
 function escapeHtml(value) {
+
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  buildDropdowns();
-});
+/******************************************************
+ * INITIALIZE
+ ******************************************************/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    buildDropdowns();
+
+  }
+);
 
 </script>
 
